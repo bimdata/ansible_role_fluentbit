@@ -42,6 +42,25 @@ Variables use for the general configuration:
 | fluentbit_svc_http      | {}              | Dictionary for HTTP built-in server configuration.        |
 | fluentbit_svc_storage   | {}              | Dictionary for storage/buffer configuration.              |
 
+For `fluentbit_svc_http`, each key is used as configuration option name and values as values.
+But you don't need to add the prefix `HTTP_`, it will be add by the template.
+For example you can define it like this:
+```
+fluentbit_svc_http:
+  server: On
+  listen: 0.0.0.0
+  port: "{{ fluentbit_monitoring_port }}"
+```
+
+It's the same for `fluentbit_svc_storage` you don't need to specify the prefix `storage.`.
+Example:
+```
+fluentbit_svc_storage:
+  path: /var/log/flb-storage/
+  sync: full
+  checksum: "off"
+```
+
 Other variables:
 
 | Variables               | Default value | Description                                               |
@@ -98,7 +117,6 @@ will create:
 
 This allow you to defined variables in multiples groupvars and cumulate them for
 hosts in multiples groups, without the need to rewrite the complete list.
-
 
 Dependencies
 ------------
