@@ -1,0 +1,41 @@
+---
+- name: "Install Fluentbit prerequisites."
+  apt:
+    name: "{{ fluentbit_prerequisites }}"
+    state: present
+
+- name: "Add Fluentbit key."
+  apt_key:
+    url: "{{ fluentbit_apt_key_url }}"
+    state: present
+
+- name: "Add Fluentbit repository."
+  apt_repository:
+    repo: "deb {{ fluentbit_apt_repos_url }} main"
+    update_cache: True
+    filename: fluentbit
+    state: present
+
+- name: "Install Fluentbit."
+  apt:
+    name: "{{ fluentbit_pkg_name }}{% if fluentbit_version is defined %}={{ fluentbit_version }}{% endif %}"
+    cache_valid_time: 3600
+    state: present
+  notify: "Restart Fluentbit."
+
+- name: "Create needed directory."
+  file:
+    path: "{{ fluentbit_dbs_path }}"
+    state: directory
+  when: fluentbit_dbs_path | length > 0
+
+- name: "Enable Fluentbit service."
+  service:
+    name: "{{ fluentbit_svc_name }}"
+    enabled: True
+
+- name: "Create main Fluentbit configuration."
+  template:
+    src: td-agent-bit.conf.j2
+    dest: /etc/td-agent-bit/td-agent-bit.conf
+  notify: "Restart Fluentbit."

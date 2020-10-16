@@ -1,0 +1,17 @@
+galaxy_info:
+  role_name: fluentbit
+  author: Romain
+  description: This role installs and configures Fluentbit.
+  company: BIMData.io
+  license: MIT
+  min_ansible_version: 2.9
+  platforms:
+    - name: Debian
+      versions:
+        - Buster
+
+  galaxy_tags:
+    - fluentbit
+    - logging
+    - logshipper
+dependencies: []

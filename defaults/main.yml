@@ -1,0 +1,34 @@
+---
+# Installation
+fluentbit_prerequisites:
+  - apt-transport-https
+  - curl
+  - gnupg
+
+fluentbit_apt_key_url: "https://packages.fluentbit.io/fluentbit.key"
+fluentbit_apt_repos_url: "https://packages.fluentbit.io/{{ ansible_distribution | lower }}/{{ ansible_distribution_release | lower }} {{ ansible_distribution_release | lower }}"
+fluentbit_pkg_name: "td-agent-bit"
+fluentbit_svc_name: "td-agent-bit"
+
+# Main configuration
+fluentbit_svc_flush: "5"
+fluentbit_svc_grace: "5"
+fluentbit_svc_daemon: "Off" # Need to be Off when using systemd
+fluentbit_svc_logfile: ""
+fluentbit_svc_loglevel: "info"
+fluentbit_svc_parsers:
+  - parsers.conf
+fluentbit_svc_plugins:
+  - plugins.conf
+fluentbit_svc_streams: []
+
+fluentbit_svc_http: {}
+fluentbit_svc_storage: {}
+
+# Log processing
+_fluentbit_inputs: "{{ lookup('template', './lookup/get_inputs.j2') }}"
+_fluentbit_filters: "{{ lookup('template', './lookup/get_filters.j2') }}"
+_fluentbit_outputs: "{{ lookup('template', './lookup/get_outputs.j2') }}"
+
+# Others
+fluentbit_dbs_path: ""

@@ -1,0 +1,12 @@
+{%- macro build_vars(current_var) -%}
+  {%- if current_var is mapping -%}
+    {{ current_var }}
+  {%- else -%}
+    {# iterable but not mapping => list #}
+    {%- if current_var is iterable -%}
+      {% for item in current_var -%}
+        {{ item }}{% if not loop.last %}, {% endif %}
+      {%- endfor -%}
+    {%- endif -%}
+  {%- endif -%}
+{%- endmacro -%}
