@@ -22,8 +22,10 @@ fluentbit_svc_plugins:
   - plugins.conf
 fluentbit_svc_streams: []
 
-fluentbit_svc_http: {}
-fluentbit_svc_storage: {}
+fluentbit_svc_http:
+  server: 'Off'
+fluentbit_svc_storage:
+  metrics: 'On'
 
 # Log processing
 _fluentbit_inputs: "{{ lookup('template', './lookup/get_inputs.j2') }}"

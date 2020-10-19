@@ -13,28 +13,28 @@ Role Variables
 
 This role tries to keep the same default configuration as if you manually install
 Fluentbit.
-You can find more informations about each option in the [Fluentbit documentation](
+You can find more information about each option in the [Fluentbit documentation](
 https://docs.fluentbit.io/manual/v/1.6/administration/configuring-fluent-bit/configuration-file).
 
-Variables use for the installation:
+Variables used for the installation:
 
 | Variables               | Default value                               | Description                                               |
 |-------------------------|---------------------------------------------|-----------------------------------------------------------|
-| fluentbit_prerequisites | ['apt-transport-https', 'curl', 'gnupg']    | List of Package that need to be install before Fluentbit. |
-| fluentbit_apt_key_url   | https://packages.fluentbit.io/fluentbit.key | The APT key for Fluentbit package.                        |
+| fluentbit_prerequisites | ['apt-transport-https', 'curl', 'gnupg']    | List of package that need to be installed before Fluentbit. |
+| fluentbit_apt_key_url   | https://packages.fluentbit.io/fluentbit.key | The APT key for the Fluentbit package.                        |
 | fluentbit_apt_repos_url | "https://packages.fluentbit.io/\{{ ansible_distribution \| lower }}/{{ ansible_distribution_release \| lower }} {{ ansible_distribution_release \| lower }}"  | The APT repository address needed to install Fluentbit. |
 | fluentbit_pkg_name      | td-agent-bit                                | The Fluentbit APT package name.                           |
 | fluentbit_svc_name      | td-agent-bit                                | The Fluentbit service name to start/stop the daemon.      |
-| fluentbit_version       | *Undefined*                                 | If undefined and Fluentbit not already present, install the latest. If undefined ans Fluentbit already present, do nothing.|
+| fluentbit_version       | *Undefined*                                 | If undefined and Fluentbit not already present, install the latest. If undefined and Fluentbit already present, do nothing.|
 
-Variables use for the general configuration:
+Variables used for the general configuration:
 
 | Variables               | Default value   | Description                                               |
 |-------------------------|-----------------|-----------------------------------------------------------|
 | fluentbit_svc_flush     | 5               | Flush time in *seconds.nanoseconds* format.               |
 | fluentbit_svc_grace     | 5               | Set the grace time is *seconds*.                          |
-| fluentbit_svc_daemon    | Off             | On/Off value to specify if Fluentbit run as a Deamon. Should be Off when use with Sytemd. |
-| fluentbit_svc_logfile   | ""              | Absolute path for an optional log file. Log to stdout if not specify. |
+| fluentbit_svc_daemon    | Off             | On/Off value to specify if Fluentbit runs as a Deamon. Should be Off when started by Sytemd. |
+| fluentbit_svc_logfile   | ""              | Absolute path for an optional log file. Log to stdout if not specified. |
 | fluentbit_svc_loglevel  | info            | Set the logging verbosity level.                          |
 | fluentbit_svc_parsers   | [parsers.conf]  | List of paths for *parsers* configuration files.          |
 | fluentbit_svc_plugins   | [plugins.conf]  | List of paths for *plugins* configuration files.          |
@@ -42,9 +42,9 @@ Variables use for the general configuration:
 | fluentbit_svc_http      | {}              | Dictionary for HTTP built-in server configuration.        |
 | fluentbit_svc_storage   | {}              | Dictionary for storage/buffer configuration.              |
 
-For `fluentbit_svc_http`, each key is used as configuration option name and values as values.
-But you don't need to add the prefix `HTTP_`, it will be add by the template.
-For example you can define it like this:
+For `fluentbit_svc_http`, each key is used as a configuration option name and values as values.
+But you don't need to add the prefix `HTTP_`, it will be added by the template.
+For example, you can define it like this:
 ```
 fluentbit_svc_http:
   server: On
@@ -52,7 +52,7 @@ fluentbit_svc_http:
   port: "{{ fluentbit_monitoring_port }}"
 ```
 
-It's the same for `fluentbit_svc_storage` you don't need to specify the prefix `storage.`.
+It's the same for `fluentbit_svc_storage`: you don't need to specify the prefix `storage.`.
 Example:
 ```
 fluentbit_svc_storage:
@@ -65,7 +65,7 @@ Other variables:
 
 | Variables               | Default value | Description                                               |
 |-------------------------|---------------|-----------------------------------------------------------|
-| fluentbit_dbs_path      | ""            | Path for a directory that will be created by the role. For example to store your input DB files. |
+| fluentbit_dbs_path      | ""            | A path for a directory that will be created by the role. For example to store your input DB files. |
 
 Variables for log processing:
 
@@ -76,18 +76,19 @@ Variables for log processing:
 | _fluentbit_outputs      | "{{ lookup('template', './lookup/get_outputs.j2') }}" | List of dictionaries defining all log outputs. |
 
 **In most cases, you should not modify these variables.**
-Templating is use to build these lists with others variables.
-* `_fluentbit_inputs` will agregate all the variables whose name matches this regex: `^fluentbit_.+_input$`.
-* `_fluentbit_filters` will agregate all the variables whose name matches this regex: `^fluentbit_.+_filter$'`.
-* `_fluentbit_outputs` will agregate all the variables whose name matches this regex: `^fluentbit_.+_output$`.
+Templating is used to build these lists with other variables.
+* `_fluentbit_inputs` will aggregate all the variables whose name matches this regex: `^fluentbit_.+_input$`.
+* `_fluentbit_filters` will aggregate all the variables whose name matches this regex: `^fluentbit_.+_filter$'`.
+* `_fluentbit_outputs` will aggregate all the variables whose name matches this regex: `^fluentbit_.+_output$`.
 
-Each varibles matching these regexes must be:
+Each variables matching these regexes must be:
   - a dictionary defining one input/filter/output **or**
   - a list of dictionaries defining one or more inputs/filters/outputs.
 
-Each dictionary is used to define one `[INPUT]`, `[FILTER]` or `[OUTPUT]` section
-in Fluentbit configuration file. Keys are used to defined keys of this section
-and values to defined the values.
+Each dictionary is used to define one `[INPUT]`, `[FILTER]`, or `[OUTPUT]` section
+in the Fluentbit configuration file. Each configuration section
+is configured with key/value couples, so the dictionary's keys are used as
+configuration keys and values as values.
 
 For example:
 ```
@@ -115,8 +116,8 @@ will create:
   path /var/log/kern.log
 ```
 
-This allow you to defined variables in multiples groupvars and cumulate them for
-hosts in multiples groups, without the need to rewrite the complete list.
+It allows you to define variables in multiple group_vars and cumulates them for
+hosts in multiples groups without the need to rewrite the complete list.
 
 Dependencies
 ------------
