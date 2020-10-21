@@ -29,18 +29,18 @@ Variables used for the installation:
 
 Variables used for the general configuration:
 
-| Variables               | Default value   | Description                                               |
-|-------------------------|-----------------|-----------------------------------------------------------|
-| fluentbit_svc_flush     | 5               | Flush time in *seconds.nanoseconds* format.               |
-| fluentbit_svc_grace     | 5               | Set the grace time is *seconds*.                          |
-| fluentbit_svc_daemon    | Off             | On/Off value to specify if Fluentbit runs as a Deamon. Should be Off when started by Sytemd. |
-| fluentbit_svc_logfile   | ""              | Absolute path for an optional log file. Log to stdout if not specified. |
-| fluentbit_svc_loglevel  | info            | Set the logging verbosity level.                          |
-| fluentbit_svc_parsers   | [parsers.conf]  | List of paths for *parsers* configuration files.          |
-| fluentbit_svc_plugins   | [plugins.conf]  | List of paths for *plugins* configuration files.          |
-| fluentbit_svc_streams   | []              | List of paths for *stream processors* configuration files.|
-| fluentbit_svc_http      | {}              | Dictionary for HTTP built-in server configuration.        |
-| fluentbit_svc_storage   | {}              | Dictionary for storage/buffer configuration.              |
+| Variables               | Default value     | Description                                               |
+|-------------------------|-------------------|-----------------------------------------------------------|
+| fluentbit_svc_flush     | 5                 | Flush time in *seconds.nanoseconds* format.               |
+| fluentbit_svc_grace     | 5                 | Set the grace time is *seconds*.                          |
+| fluentbit_svc_daemon    | "off"             | On/Off value to specify if Fluentbit runs as a Deamon. Should be Off when started by Sytemd. |
+| fluentbit_svc_logfile   | ""                | Absolute path for an optional log file. Log to stdout if not specified. |
+| fluentbit_svc_loglevel  | info              | Set the logging verbosity level.                          |
+| fluentbit_svc_parsers   | ["parsers.conf"]  | List of paths for *parsers* configuration files.          |
+| fluentbit_svc_plugins   | ["plugins.conf"]  | List of paths for *plugins* configuration files.          |
+| fluentbit_svc_streams   | []                | List of paths for *stream processors* configuration files.|
+| fluentbit_svc_http      | {}                | Dictionary for HTTP built-in server configuration.        |
+| fluentbit_svc_storage   | {}                | Dictionary for storage/buffer configuration.              |
 
 For `fluentbit_svc_http`, each key is used as a configuration option name and values as values.
 But you don't need to add the prefix `HTTP_`, it will be added by the template.
@@ -116,7 +116,7 @@ will create:
   path /var/log/kern.log
 ```
 
-It allows you to define variables in multiple group_vars and cumulates them for
+It allows you to define variables in multiple group_vars and cumulate them for
 hosts in multiples groups without the need to rewrite the complete list.
 
 Dependencies

@@ -13,7 +13,7 @@ fluentbit_svc_name: "td-agent-bit"
 # Main configuration
 fluentbit_svc_flush: "5"
 fluentbit_svc_grace: "5"
-fluentbit_svc_daemon: "Off" # Need to be Off when using systemd
+fluentbit_svc_daemon: "off" # Need to be Off when using systemd
 fluentbit_svc_logfile: ""
 fluentbit_svc_loglevel: "info"
 fluentbit_svc_parsers:
@@ -23,9 +23,9 @@ fluentbit_svc_plugins:
 fluentbit_svc_streams: []
 
 fluentbit_svc_http:
-  server: 'Off'
+  server: "off"
 fluentbit_svc_storage:
-  metrics: 'On'
+  metrics: "on"
 
 # Log processing
 _fluentbit_inputs: "{{ lookup('template', './lookup/get_inputs.j2') }}"
