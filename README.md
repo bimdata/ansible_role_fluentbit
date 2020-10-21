@@ -33,7 +33,7 @@ Variables used for the general configuration:
 |-------------------------|-------------------|-----------------------------------------------------------|
 | fluentbit_svc_flush     | 5                 | Flush time in *seconds.nanoseconds* format.               |
 | fluentbit_svc_grace     | 5                 | Set the grace time is *seconds*.                          |
-| fluentbit_svc_daemon    | "off"             | On/Off value to specify if Fluentbit runs as a Deamon. Should be Off when started by Sytemd. |
+| fluentbit_svc_daemon    | "off"             | On/Off value to specify if Fluentbit runs as a Deamon. Should be Off when using the provided Systemd unit. |
 | fluentbit_svc_logfile   | ""                | Absolute path for an optional log file. Log to stdout if not specified. |
 | fluentbit_svc_loglevel  | info              | Set the logging verbosity level.                          |
 | fluentbit_svc_parsers   | ["parsers.conf"]  | List of paths for *parsers* configuration files.          |

@@ -13,7 +13,7 @@ fluentbit_svc_name: "td-agent-bit"
 # Main configuration
 fluentbit_svc_flush: "5"
 fluentbit_svc_grace: "5"
-fluentbit_svc_daemon: "off" # Need to be Off when using systemd
+fluentbit_svc_daemon: "off" # Need to be Off when using the provided systemd unit.
 fluentbit_svc_logfile: ""
 fluentbit_svc_loglevel: "info"
 fluentbit_svc_parsers:
