@@ -27,6 +27,7 @@
   file:
     path: "{{ fluentbit_dbs_path }}"
     state: directory
+    mode: 0755
   when: fluentbit_dbs_path | length > 0
 
 - name: "Enable Fluentbit service."
@@ -38,4 +39,5 @@
   template:
     src: td-agent-bit.conf.j2
     dest: /etc/td-agent-bit/td-agent-bit.conf
+    mode: 0644
   notify: "Restart Fluentbit."
