@@ -1,0 +1,7 @@
+{%- from "macros.j2" import build_vars with context -%}
+[
+{%- for varname in lookup('varnames', '^fluentbit_.+_input$', wantlist=True) -%}
+  {{ build_vars(lookup('vars', varname)) }}
+  {%- if not loop.last %}, {% endif %}
+{%- endfor -%}
+]
