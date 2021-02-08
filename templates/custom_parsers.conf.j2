@@ -1,0 +1,9 @@
+{{ ansible_managed | comment }}
+
+
+{% for _parser in _fluentbit_parsers %}
+[PARSER]
+{% for key, value in _parser.items() %}
+  {{ key }} {{ value }}
+{% endfor %}
+{% endfor %}

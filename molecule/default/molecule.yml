@@ -1,0 +1,33 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+platforms:
+  - name: pd-fluentbit-stretch
+    image: debian:stretch
+    dockerfile: ../resources/Dockerfile.j2
+    command: /sbin/init
+    tmpfs: ['/tmp', '/run', '/run/lock']
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    groups:
+      - base
+  - name: pd-fluentbit-buster
+    image: debian:buster
+    dockerfile: ../resources/Dockerfile.j2
+    command: /sbin/init
+    tmpfs: ['/tmp', '/run', '/run/lock']
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    groups:
+      - base
+provisioner:
+  name: ansible
+  log: True
+  lint:
+    name: ansible-lint
+    enabled: True
+  inventory:
+    links:
+      group_vars: inventory/group_vars/

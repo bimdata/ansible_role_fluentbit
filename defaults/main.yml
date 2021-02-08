@@ -5,6 +5,8 @@ fluentbit_prerequisites:
   - curl
   - gnupg
 
+fluentbit_extra_groups: 
+  - adm
 fluentbit_apt_key_url: "https://packages.fluentbit.io/fluentbit.key"
 fluentbit_apt_repos_url: "https://packages.fluentbit.io/{{ ansible_distribution | lower }}/{{ ansible_distribution_release | lower }} {{ ansible_distribution_release | lower }}"
 fluentbit_pkg_name: "td-agent-bit"
@@ -14,23 +16,31 @@ fluentbit_svc_name: "td-agent-bit"
 fluentbit_svc_flush: "5"
 fluentbit_svc_grace: "5"
 fluentbit_svc_daemon: "off" # Need to be Off when using the provided systemd unit.
-fluentbit_svc_logfile: ""
-fluentbit_svc_loglevel: "info"
+fluentbit_svc_loglevel: 'error'
+fluentbit_log_path: '/var/log/td-agent-bit'
+fluentbit_svc_logfile: '/var/log/td-agent-bit/td-agent-bit.log'
 fluentbit_svc_parsers:
-  - parsers.conf
-fluentbit_svc_plugins:
-  - plugins.conf
+  - custom_parsers.conf
+fluentbit_svc_plugins: []
 fluentbit_svc_streams: []
 
-fluentbit_svc_http:
-  server: "off"
+# Storage
+fluentbit_dbs_path: '/var/run/fluentbit/'
 fluentbit_svc_storage:
-  metrics: "on"
+  path: '/var/run/fluentbit/fluentbit.buffer'
+  sync: normal
+  backlog.mem_limit: '10M'
+  metrics: On
 
 # Log processing
 _fluentbit_inputs: "{{ lookup('template', './lookup/get_inputs.j2') }}"
 _fluentbit_filters: "{{ lookup('template', './lookup/get_filters.j2') }}"
 _fluentbit_outputs: "{{ lookup('template', './lookup/get_outputs.j2') }}"
+_fluentbit_parsers: "{{ lookup('template', './lookup/get_parsers.j2') }}"
 
-# Others
-fluentbit_dbs_path: ""
+# Monitoring
+fluentbit_monitoring_port: 2020
+fluentbit_svc_http:
+  server: On
+  listen: 127.0.0.1
+  port: "{{ fluentbit_monitoring_port }}"

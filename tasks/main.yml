@@ -23,17 +23,67 @@
     state: present
   notify: "Restart Fluentbit."
 
-- name: "Create needed directory."
+- name: "Create group td-agent-bit"
+  group:
+    name: td-agent-bit
+    state: present
+    system: True
+
+- name: "Create user with adm group"
+  user:
+    name: td-agent-bit
+    create_home: False
+    group: td-agent-bit
+    state: present
+    groups: "{{ fluentbit_extra_groups | join(',') }}"
+    system: True
+    append: True
+
+- name: Ensure unit directory is present
+  file:
+    path: /etc/systemd/system/td-agent-bit.service.d
+    state: directory
+    mode: '0644'
+
+- name: Add unit override.conf file
+  copy:
+    src: override.conf
+    dest: /etc/systemd/system/td-agent-bit.service.d/override.conf
+
+- name: Add lua file
+  copy:
+    src: functions.lua
+    dest: /etc/td-agent-bit/functions.lua
+
+- name: "Create run directory."
   file:
     path: "{{ fluentbit_dbs_path }}"
     state: directory
     mode: 0755
+    owner: td-agent-bit
+    group: td-agent-bit
   when: fluentbit_dbs_path | length > 0
 
+- name: "Create logs directory."
+  file:
+    path: "{{ fluentbit_log_path }}"
+    state: directory
+    mode: 0755
+    owner: td-agent-bit
+    group: td-agent-bit
+  when: fluentbit_log_path | length > 0
+
 - name: "Enable Fluentbit service."
-  service:
+  systemd:
+    daemon_reload: True
     name: "{{ fluentbit_svc_name }}"
     enabled: True
+
+- name: "Create Fluentbit parsers."
+  template:
+    src: custom_parsers.conf.j2
+    dest: /etc/td-agent-bit/custom_parsers.conf
+    mode: 0644
 
 - name: "Create main Fluentbit configuration."
   template:
@@ -41,3 +91,27 @@
     dest: /etc/td-agent-bit/td-agent-bit.conf
     mode: 0644
   notify: "Restart Fluentbit."
+
+- name: Check if user exists
+  getent:
+    database: passwd
+    key: "{{ monitoring_user }}"
+    fail_key: False
+
+- name: check iptables executable is present
+  shell: "which iptables"
+  register: result
+  ignore_errors: True
+  changed_when: false
+
+
+- name: "Unallow all except {{ monitoring_user }} to monitor fluentbit on port 2020"
+  ansible.builtin.iptables:
+    chain: OUTPUT
+    protocol: tcp
+    destination_port: "{{ fluentbit_monitoring_port }}"
+    uid_owner: "!{{ monitoring_user }}"
+    jump: DROP
+    comment: "Refuse all except {{ monitoring_user }} to monitor td-agent-bit:2020"
+  when: "getent_passwd.get(monitoring_user) != '' and result.rc == 0"
+
