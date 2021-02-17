@@ -1,0 +1,40 @@
+fluentbit_version: 1.6.10
+monitoring_user: 'dd-agent'
+
+fluentbit_basic_input:
+  Name: tail
+  Path: '/var/log/kern.log, /var/log/auth.log, /var/log/syslog'
+  Tag: 'pd.**'
+  Multiline: Off
+  Storage.type: filesystem
+  Mem_buf_limit: 10MB
+  Db: '/var/run/fluentbit/fluent-bit-system.sql3'
+
+fluentbit_nest_peopledoc_filter:
+  name: nest
+  Match: 'pd.*'
+  Operation: nest
+  Wildcard: peopledoc_*
+  Nest_under: peopledoc
+  Remove_prefix: peopledoc_
+
+fluentbit_nest_http_request_filter:
+  Name: nest
+  Match: 'pd.*'
+  Operation: nest
+  Wildcard: http_request_*
+  Nest_under: http_request
+  Remove_prefix: http_request
+
+fluentbit_nest_http_response_filter:
+  Name: nest
+  Match: 'pd.*'
+  Operation: nest
+  Wildcard: http_response_*
+  Nest_under: http_response
+  Remove_prefix: http_response
+
+fluentbit_forward_output:
+  Name: forward
+  Match: 'pd.*'
+  Upstream: '/etc/td-agent-bit/forward-balancing'

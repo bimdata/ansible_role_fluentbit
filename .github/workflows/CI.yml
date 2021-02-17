@@ -1,0 +1,12 @@
+name: CI
+on: push
+
+jobs:
+  molecule:
+    name: Run molecule test on Ansible role
+    runs-on: ubuntu-20.04 
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          path: "${{ github.repository }}"
+      - uses: peopledoc/molecule-action@v2
