@@ -18,7 +18,7 @@ fluentbit_svc_grace: "5"
 fluentbit_svc_daemon: "off" # Need to be Off when using the provided systemd unit.
 fluentbit_svc_loglevel: 'error'
 fluentbit_log_path: '/var/log/td-agent-bit'
-fluentbit_svc_logfile: '/var/log/td-agent-bit/td-agent-bit.log'
+fluentbit_svc_logfile: ''
 fluentbit_svc_parsers:
   - custom_parsers.conf
 fluentbit_svc_plugins: []
@@ -37,6 +37,7 @@ _fluentbit_inputs: "{{ lookup('template', './lookup/get_inputs.j2') }}"
 _fluentbit_filters: "{{ lookup('template', './lookup/get_filters.j2') }}"
 _fluentbit_outputs: "{{ lookup('template', './lookup/get_outputs.j2') }}"
 _fluentbit_parsers: "{{ lookup('template', './lookup/get_parsers.j2') }}"
+_fluentbit_nodes: "{{ lookup('template', './lookup/get_nodes.j2') }}"
 
 # Monitoring
 fluentbit_monitoring_port: 2020
