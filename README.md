@@ -26,21 +26,23 @@ Variables used for the installation:
 | fluentbit_pkg_name      | td-agent-bit                                | The Fluentbit APT package name.                           |
 | fluentbit_svc_name      | td-agent-bit                                | The Fluentbit service name to start/stop the daemon.      |
 | fluentbit_version       | *Undefined*                                 | If undefined and Fluentbit not already present, install the latest. If undefined and Fluentbit already present, do nothing.|
+| fluentbit_extra_groups  | adm                                         | Extra groups to add to the user which run the service.|
 
 Variables used for the general configuration:
 
-| Variables               | Default value     | Description                                               |
-|-------------------------|-------------------|-----------------------------------------------------------|
-| fluentbit_svc_flush     | 5                 | Flush time in *seconds.nanoseconds* format.               |
-| fluentbit_svc_grace     | 5                 | Set the grace time is *seconds*.                          |
-| fluentbit_svc_daemon    | "off"             | On/Off value to specify if Fluentbit runs as a Deamon. Should be Off when using the provided Systemd unit. |
-| fluentbit_svc_logfile   | ""                | Absolute path for an optional log file. Log to stdout if not specified. |
-| fluentbit_svc_loglevel  | info              | Set the logging verbosity level.                          |
-| fluentbit_svc_parsers   | ["parsers.conf"]  | List of paths for *parsers* configuration files.          |
-| fluentbit_svc_plugins   | ["plugins.conf"]  | List of paths for *plugins* configuration files.          |
-| fluentbit_svc_streams   | []                | List of paths for *stream processors* configuration files.|
-| fluentbit_svc_http      | {}                | Dictionary for HTTP built-in server configuration.        |
-| fluentbit_svc_storage   | {}                | Dictionary for storage/buffer configuration.              |
+| Variables                 | Default value                 | Description                                               |
+|---------------------------|-------------------------------|-----------------------------------------------------------|
+| fluentbit_svc_flush       | 5                             | Flush time in *seconds.nanoseconds* format.               |
+| fluentbit_svc_grace       | 5                             | Set the grace time is *seconds*.                          |
+| fluentbit_svc_daemon      | "off"                         | On/Off value to specify if Fluentbit runs as a Deamon. Should be Off when using the provided Systemd unit. |
+| fluentbit_svc_logfile     | ""                            | Absolute path for an optional log file. Log to stdout if not specified. |
+| fluentbit_svc_loglevel    | error                         | Set the logging verbosity level.                          |
+| fluentbit_svc_parsers     | ["custom_parsers.conf"]       | List of paths for *parsers* configuration files.          |
+| fluentbit_svc_plugins     | ["plugins.conf"]              | List of paths for *plugins* configuration files.          |
+| fluentbit_svc_streams     | []                            | List of paths for *stream processors* configuration files.|
+| fluentbit_svc_http        | {server:on, listen:127.0.0.1} | Dictionary for HTTP built-in server configuration.        |
+| fluentbit_monitoring_port | {}                            | Port used for http service to monitor fluentbit.          |
+| fluentbit_svc_storage     | {path: "/var/run/fluentbit/fluentbit.buffer", sync: normal, backlog.mem_limit: "10M", metrics: On }                            | Dictionary for storage/buffer configuration.              |
 
 For `fluentbit_svc_http`, each key is used as a configuration option name and values as values.
 But you don't need to add the prefix `HTTP_`, it will be added by the template.
@@ -69,23 +71,27 @@ Other variables:
 
 Variables for log processing:
 
-| Variables               | Default value                                         | Description                                    |
-|-------------------------|-------------------------------------------------------|------------------------------------------------|
-| _fluentbit_inputs       | "{{ lookup('template', './lookup/get_inputs.j2') }}"  | List of dictionaries defining all log inputs.  |
-| _fluentbit_filters      | "{{ lookup('template', './lookup/get_filters.j2') }}" | List of dictionaries defining all log filters. |
-| _fluentbit_outputs      | "{{ lookup('template', './lookup/get_outputs.j2') }}" | List of dictionaries defining all log outputs. |
+| Variables               | Default value                                         | Description                                         |
+|-------------------------|-------------------------------------------------------|-----------------------------------------------------|
+| _fluentbit_inputs       | "{{ lookup('template', './lookup/get_inputs.j2') }}"  | List of dictionaries defining all log inputs.       |
+| _fluentbit_filters      | "{{ lookup('template', './lookup/get_filters.j2') }}" | List of dictionaries defining all log filters.      |
+| _fluentbit_outputs      | "{{ lookup('template', './lookup/get_outputs.j2') }}" | List of dictionaries defining all log outputs.      |
+| _fluentbit_parsers      | "{{ lookup('template', './lookup/get_parsers.j2') }}" | List of dictionaries defining all log parsers.      |  
+| _fluentbit_nodes        | "{{ lookup('template', './lookup/get_nodes.j2') }}"   | List of dictionaries defining all nodes to forward. |
 
 **In most cases, you should not modify these variables.**
 Templating is used to build these lists with other variables.
 * `_fluentbit_inputs` will aggregate all the variables whose name matches this regex: `^fluentbit_.+_input$`.
 * `_fluentbit_filters` will aggregate all the variables whose name matches this regex: `^fluentbit_.+_filter$'`.
 * `_fluentbit_outputs` will aggregate all the variables whose name matches this regex: `^fluentbit_.+_output$`.
+* `_fluentbit_parsers` will aggregate all the variables whose name matches this regex: `^fluentbit_.+_parsers$`.
+* `_fluentbit_nodes` will aggregate all the variables whose name matches this regex: `^fluentbit_.+_nodes$`.
 
 Each variables matching these regexes must be:
   - a dictionary defining one input/filter/output **or**
   - a list of dictionaries defining one or more inputs/filters/outputs.
 
-Each dictionary is used to define one `[INPUT]`, `[FILTER]`, or `[OUTPUT]` section
+Each dictionary is used to define one `[INPUT]`, `[FILTER]`, `[OUTPUT]`, `[PARSER]` or `[NODE]` section
 in the Fluentbit configuration file. Each configuration section
 is configured with key/value couples, so the dictionary's keys are used as
 configuration keys and values as values.

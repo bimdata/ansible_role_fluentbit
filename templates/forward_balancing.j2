@@ -1,0 +1,10 @@
+{{ ansible_managed | comment }}
+[UPSTREAM]
+  Name       forward_balancing
+
+{% for _node in _fluentbit_nodes %}
+[NODE]
+{% for key, value in _node.items() %}
+  {{ key }} {{ value }}
+{% endfor %}
+{% endfor %}
