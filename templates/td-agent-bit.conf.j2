@@ -42,20 +42,20 @@
 {% for _input in _fluentbit_inputs %}
 [INPUT]
 {% for key, value in _input.items() %}
-  {{ key }} {{ value }}
+  {{ key | regex_replace ('^[0-9]+__', '') }} {{ value }}
 {% endfor %}
 {% endfor %}
 
 {% for _filter in _fluentbit_filters %}
 [FILTER]
 {% for key, value in _filter.items() %}
-  {{ key }} {{ value }}
+  {{ key | regex_replace ('^[0-9]+__', '') }} {{ value }}
 {% endfor %}
 {% endfor %}
 
 {% for _output in _fluentbit_outputs %}
 [OUTPUT]
 {% for key, value in _output.items() %}
-  {{ key }} {{ value }}
+  {{ key | regex_replace ('^[0-9]+__', '') }} {{ value }}
 {% endfor %}
 {% endfor %}
