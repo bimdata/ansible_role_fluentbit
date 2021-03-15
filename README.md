@@ -119,6 +119,30 @@ will create:
 It allows you to define variables in multiple group_vars and cumulate them for
 hosts in multiples groups without the need to rewrite the complete list.
 
+Ansible dictionaries can't have the same key multiple times. This can be a problem
+to use stuff like `record`.
+To overcome this issue, each key can be prefix with a number that will be remove
+in the template file. It needs to match this regex: `'^[0-9]+__'`.
+
+Fir example:
+```
+fluentbit_add_context_filter:
+  - name: record_modifier
+    match: '*'
+    0__record: hostname ${HOSTNAME}
+    1__record: product Awesome_Tool
+```
+
+will create:
+```
+[FILTER]
+  name record_modifier
+  match *
+  record hostname ${HOSTNAME}
+  record product Awesome_Tool
+
+```
+
 Dependencies
 ------------
 
