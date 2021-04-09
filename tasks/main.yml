@@ -49,11 +49,13 @@
   copy:
     src: override.conf
     dest: /etc/systemd/system/td-agent-bit.service.d/override.conf
+  notify: "Restart Fluentbit."
 
 - name: Add lua file
   copy:
     src: functions.lua
     dest: /etc/td-agent-bit/functions.lua
+  notify: "Restart Fluentbit."
 
 - name: "Create run directory."
   file:
@@ -84,12 +86,14 @@
     src: custom_parsers.conf.j2
     dest: /etc/td-agent-bit/custom_parsers.conf
     mode: 0644
+  notify: "Restart Fluentbit."
 
 - name: "Create Forward balancing configuration."
   template:
     src: forward_balancing.j2
     dest: /etc/td-agent-bit/forward_balancing
     mode: 0644
+  notify: "Restart Fluentbit."
 
 - name: "Create main Fluentbit configuration."
   template:
