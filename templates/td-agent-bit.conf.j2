@@ -47,10 +47,22 @@
 {% endfor %}
 
 {% for _filter in _fluentbit_filters %}
+{% if _filter is mapping %}
 [FILTER]
 {% for key, value in _filter.items() %}
   {{ key }} {{ value }}
 {% endfor %}
+
+{% else %}
+{% for myfilters in _filter %}
+{% for key, value in myfilters.items() %}
+[FILTER]
+  {{ key }} {{ value }}
+{% endfor %}
+{% endfor %}
+
+
+{% endif %}
 {% endfor %}
 
 {% for _output in _fluentbit_outputs %}
