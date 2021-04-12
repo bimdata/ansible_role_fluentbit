@@ -144,6 +144,16 @@ fluentbit_env_filter
   match: '*'
   record: "env {{ env }}"
 
+# Ordonned filter list
+# usefull if order matters
+fluentbit_env_filter
+  - name: first-record_modifier
+    match: '*'
+    record: "env {{ env }}"
+  - name: second-record_modifier
+    match: '*'
+    record: "env {{ env }}"
+
 fluentbit_central_output:
   name: forward
   match: '*'
