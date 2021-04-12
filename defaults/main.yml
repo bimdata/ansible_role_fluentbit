@@ -35,6 +35,7 @@ fluentbit_svc_storage:
 # Log processing
 _fluentbit_inputs: "{{ lookup('template', './lookup/get_inputs.j2') }}"
 _fluentbit_filters: "{{ lookup('template', './lookup/get_filters.j2') }}"
+_fluentbit_postfilters: "{{ lookup('template', './lookup/get_postfilters.j2') }}"
 _fluentbit_outputs: "{{ lookup('template', './lookup/get_outputs.j2') }}"
 _fluentbit_parsers: "{{ lookup('template', './lookup/get_parsers.j2') }}"
 _fluentbit_nodes: "{{ lookup('template', './lookup/get_nodes.j2') }}"

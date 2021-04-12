@@ -65,6 +65,24 @@
 {% endif %}
 {% endfor %}
 
+{% for _postfilter in _fluentbit_postfilters %}
+{% if _postfilter is mapping %}
+[FILTER]
+{% for key, value in _postfilter.items() %}
+  {{ key }} {{ value }}
+{% endfor %}
+
+{% else %}
+{% for myfilters in _filter %}
+{% for key, value in myfilters.items() %}
+[FILTER]
+  {{ key }} {{ value }}
+{% endfor %}
+{% endfor %}
+
+{% endif %}
+{% endfor %}
+
 {% for _output in _fluentbit_outputs %}
 [OUTPUT]
 {% for key, value in _output.items() %}
