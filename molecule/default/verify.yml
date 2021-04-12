@@ -1,0 +1,30 @@
+---
+- name: Verify
+  hosts: all
+  tasks:
+    - name: "Generate some fake log"
+      shell: "echo This is a test message. >> {{ fluentbit_file_input.path }}"
+    - name: "Check if fluentbit is installed"
+      package:
+        name: "{{ fluentbit_pkg_name }}"
+        state: present
+      check_mode: yes
+      register: pkg_install
+      failed_when: pkg_install is changed or pkg_install is failed
+    - name: "Check if fluentbit service is running"
+      service:
+        name: "{{ fluentbit_svc_name }}"
+        state: started
+        enabled: yes
+      check_mode: yes
+      register: svc_conf
+      failed_when: svc_conf is changed or svc_conf is failed
+    - name: "Get log file content"
+      slurp:
+        src: "{{ fluentbit_file_output.path }}/{{ fluentbit_file_output.file }}"
+      register: logfile
+    - name: "Check that the log file contains the expected strings"
+      assert:
+        that:
+          - "'This is a test message.' in logfile['content'] | b64decode"
+          - "'JUST_A_TEST' in logfile['content'] | b64decode"
