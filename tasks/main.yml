@@ -123,7 +123,9 @@
     uid_owner: "!{{ monitoring_user }}"
     jump: DROP
     comment: "Refuse all except {{ monitoring_user }} to monitor td-agent-bit:2020"
-  when: "getent_passwd.get(monitoring_user) != '' and result.rc == 0"
+  when:
+    - fluentbit_firewall_restriction_enabled
+    - "getent_passwd.get(monitoring_user) != '' and result.rc == 0"
   tags:
     - firewall
 
