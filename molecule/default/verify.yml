@@ -2,8 +2,15 @@
 - name: Verify
   hosts: all
   tasks:
+    - name: "Create fake log file"
+      file:
+        path: "{{ fluentbit_file_input.path }}"
+        mode: 0644
+        state: file
     - name: "Generate some fake log"
-      shell: "echo This is a test message. >> {{ fluentbit_file_input.path }}"
+      lineinfile:
+        path: "{{ fluentbit_file_input.path }}"
+        line: "This is a test message."
     - name: "Check if fluentbit is installed"
       package:
         name: "{{ fluentbit_pkg_name }}"
