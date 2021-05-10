@@ -10,7 +10,12 @@ galaxy_info:
   platforms:
     - name: Debian
       versions:
+        - Stretch
         - Buster
+    - name: Ubuntu
+      versions:
+        - bionic
+        - focal
 
   galaxy_tags:
     - fluentbit

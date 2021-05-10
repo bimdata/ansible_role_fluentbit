@@ -6,7 +6,7 @@ This role installs and configures Fluentbit.
 Requirements
 ------------
 
-* This role is only tested on Debian 10.x (Buster).
+* This role is only tested with Ansible >= 2.9.
 
 Role Variables
 --------------
