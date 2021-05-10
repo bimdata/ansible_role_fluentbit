@@ -10,9 +10,8 @@ jobs:
     name: Molecule
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-        with:
-          path: "${{ github.repository }}"
+      - name: Check out the codebase.
+        uses: actions/checkout@v2
 
       - name: Set up Python 3.
         uses: actions/setup-python@v2
