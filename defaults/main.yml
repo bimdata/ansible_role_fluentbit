@@ -5,7 +5,7 @@ fluentbit_prerequisites:
   - curl
   - gnupg
 
-fluentbit_extra_groups: 
+fluentbit_extra_groups:
   - adm
 fluentbit_apt_key_url: "https://packages.fluentbit.io/fluentbit.key"
 fluentbit_apt_repos_url: "https://packages.fluentbit.io/{{ ansible_distribution | lower }}/{{ ansible_distribution_release | lower }} {{ ansible_distribution_release | lower }}"
@@ -41,6 +41,7 @@ _fluentbit_parsers: "{{ lookup('template', './lookup/get_parsers.j2') }}"
 _fluentbit_nodes: "{{ lookup('template', './lookup/get_nodes.j2') }}"
 
 # Monitoring
+fluentbit_firewall_restriction_enabled: false
 fluentbit_monitoring_port: 2020
 fluentbit_svc_http:
   server: On
