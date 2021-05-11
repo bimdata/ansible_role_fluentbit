@@ -16,6 +16,7 @@
         name: "{{ fluentbit_pkg_name }}"
         state: present
       register: pkg_install
+      check_mode: yes
       failed_when: pkg_install is changed or pkg_install is failed
     - name: "Check if fluentbit service is running"
       service:
@@ -23,6 +24,7 @@
         state: started
         enabled: yes
       register: svc_conf
+      check_mode: yes
       failed_when: svc_conf is changed or svc_conf is failed
     - name: "Get log file content"
       slurp:
