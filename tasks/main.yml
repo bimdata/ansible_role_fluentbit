@@ -113,6 +113,8 @@
   register: result
   ignore_errors: True
   changed_when: false
+  when:
+    - fluentbit_firewall_restriction_enabled
 
 
 - name: "Unallow all except {{ monitoring_user }} to monitor fluentbit on port 2020"
