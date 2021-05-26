@@ -1,4 +1,6 @@
+---
 galaxy_info:
+  namespace: bimdata
   role_name: fluentbit
   author: Romain
   description: This role installs and configures Fluentbit.
@@ -8,7 +10,12 @@ galaxy_info:
   platforms:
     - name: Debian
       versions:
+        - Stretch
         - Buster
+    - name: Ubuntu
+      versions:
+        - bionic
+        - focal
 
   galaxy_tags:
     - fluentbit

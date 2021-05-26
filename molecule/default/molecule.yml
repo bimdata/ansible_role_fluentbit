@@ -1,0 +1,67 @@
+---
+driver:
+  name: docker
+lint: |
+  set -e
+  yamllint .
+  ansible-lint --force-color
+platforms:
+  - name: fluentbit_stretch
+    image: debian:stretch
+    command: /sbin/init
+    tmpfs: ['/tmp', '/run', '/run/lock']
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    groups:
+      - fluentbit
+  - name: fluentbit_buster
+    image: debian:buster
+    command: /sbin/init
+    tmpfs: ['/tmp', '/run', '/run/lock']
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    groups:
+      - fluentbit
+  - name: fluentbit_bionic
+    image: ubuntu:bionic
+    command: /sbin/init
+    tmpfs: ['/tmp', '/run', '/run/lock']
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    groups:
+      - fluentbit
+  - name: fluentbit_focal
+    image: ubuntu:focal
+    command: /sbin/init
+    tmpfs: ['/tmp', '/run', '/run/lock']
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    groups:
+      - fluentbit
+provisioner:
+  name: ansible
+  playbook:
+    converge: converge.yml
+    verify: verify.yml
+  inventory:
+    group_vars:
+      fluentbit:
+        fluentbit_pkg_name: "td-agent-bit"
+        fluentbit_svc_name: "td-agent-bit"
+        fluentbit_file_input:
+          name: tail
+          alias: file_input
+          path: /var/log/log_input
+          read_from_head: True
+          refresh_interval: 1
+        fluentbit_test_filter:
+          name: modify
+          alias: modify_filter
+          match: '*'
+          0__add: test JUST_A_TEST
+          1__add: test2 JUST_A_TEST2
+        fluentbit_file_output:
+          name: file
+          match: '*'
+          path: /var/log
+          file: check_output.txt

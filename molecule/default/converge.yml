@@ -1,0 +1,7 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+    - name: "Include ansible_role_fluentbit"
+      include_role:
+        name: "ansible_role_fluentbit"
