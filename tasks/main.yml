@@ -36,8 +36,7 @@
     state: present
   notify: "Restart Fluentbit."
 
-- name: Debian - hold elasticsearch version
-  become: yes
+- name: "Hold Fluentbit version."
   dpkg_selections:
     name: "{{ fluentbit_pkg_name }}"
     selection: "hold"
