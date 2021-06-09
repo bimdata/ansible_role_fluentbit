@@ -8,6 +8,8 @@ fluentbit_prerequisites:
 fluentbit_apt_key_url: "https://packages.fluentbit.io/fluentbit.key"
 fluentbit_apt_repos_url: "https://packages.fluentbit.io/{{ ansible_distribution | lower }}/{{ ansible_distribution_release | lower }} {{ ansible_distribution_release | lower }}"
 fluentbit_pkg_name: "td-agent-bit"
+fluentbit_pkg_version: "{{ fluentbit_version | default('') }}"  # For retro-compatibility
+fluentbit_pkg_version_hold: "{{ fluentbit_pkg_version | default(False) | ternary(True, False) }}"
 fluentbit_svc_name: "td-agent-bit"
 
 # Main configuration

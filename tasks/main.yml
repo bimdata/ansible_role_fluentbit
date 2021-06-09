@@ -16,12 +16,32 @@
     filename: fluentbit
     state: present
 
+- name: "Get installed Fluentbit version."
+  command: dpkg-query --showformat='${Version}' --show {{ fluentbit_pkg_name }}
+  register: fluentbit_pkg_installed_version
+  failed_when: False
+  changed_when: False
+  check_mode: no
+
+- name: "Unhold Fluentbit version."
+  dpkg_selections:
+    name: "{{ fluentbit_pkg_name }}"
+    selection: install
+  when: not fluentbit_pkg_version_hold or (fluentbit_pkg_installed_version.stdout and fluentbit_pkg_installed_version.stdout != fluentbit_pkg_version)
+
 - name: "Install Fluentbit."
   apt:
-    name: "{{ fluentbit_pkg_name }}{% if fluentbit_version is defined %}={{ fluentbit_version }}{% endif %}"
+    name: "{{ fluentbit_pkg_name }}{% if fluentbit_pkg_version is defined and fluentbit_pkg_version != '' %}={{ fluentbit_pkg_version }}{% endif %}"
     cache_valid_time: 3600
     state: present
   notify: "Restart Fluentbit."
+
+- name: Debian - hold elasticsearch version
+  become: yes
+  dpkg_selections:
+    name: "{{ fluentbit_pkg_name }}"
+    selection: "hold"
+  when: fluentbit_pkg_version_hold
 
 - name: "Create needed directory."
   file:
