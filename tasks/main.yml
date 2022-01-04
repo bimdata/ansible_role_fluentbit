@@ -60,3 +60,25 @@
     dest: /etc/td-agent-bit/td-agent-bit.conf
     mode: 0644
   notify: "Restart Fluentbit."
+
+- name: "Create needed directory."
+  file:
+    path: "/etc/systemd/system/{{ fluentbit_svc_name }}.service.d"
+    state: directory
+    mode: 0755
+  when: fluentbit_svc_limit_open_files is defined
+
+- name: "Override systemd configuration if needed."
+  template:
+    src: td-agent-bit-override.conf.j2
+    dest: "/etc/systemd/system/{{ fluentbit_svc_name }}.service.d/override.conf"
+    mode: 0644
+  register: _override
+  when: fluentbit_svc_limit_open_files is defined
+
+- name: "Delete ovveride systemd configuration if needed."
+  file:
+    path: "/etc/systemd/system/{{ fluentbit_svc_name }}.service.d/override.conf"
+    state: absent
+  when: fluentbit_svc_limit_open_files is not defined
+  register: _override
