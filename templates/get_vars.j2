@@ -1,6 +1,6 @@
 #jinja2: lstrip_blocks: True
 [
-{% for varname in lookup('varnames', "^fluentbit_.+_"+vartype+"(s)?$", wantlist=True) %}
+{% for varname in lookup('varnames', '^fluentbit_.+_'+var_type+'(s)?$', wantlist=True) %}
   {% set var=lookup('vars', varname) %}
   {% if var | length %}
     {% if var is mapping %}

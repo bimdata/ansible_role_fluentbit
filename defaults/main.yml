@@ -29,10 +29,12 @@ fluentbit_svc_http:
 fluentbit_svc_storage:
   metrics: "on"
 
+# fluentbit_svc_limit_open_files: 65536
+
 # Log processing
-_fluentbit_inputs: "{{ lookup('template', 'get_vars.j2', template_vars=dict(vartype='input')) }}"
-_fluentbit_filters: "{{ lookup('template', 'get_vars.j2', template_vars=dict(vartype='filter')) }}"
-_fluentbit_outputs: "{{ lookup('template', 'get_vars.j2', template_vars=dict(vartype='output')) }}"
+_fluentbit_inputs: "{{ lookup('template', 'get_vars.j2', template_vars=dict(var_type='input')) }}"
+_fluentbit_filters: "{{ lookup('template', 'get_vars.j2', template_vars=dict(var_type='filter')) }}"
+_fluentbit_outputs: "{{ lookup('template', 'get_vars.j2', template_vars=dict(var_type='output')) }}"
 
 # Others
 fluentbit_dbs_path: ""
