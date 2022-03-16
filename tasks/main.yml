@@ -34,7 +34,7 @@
   apt_repository:
     repo: |
       deb [signed-by={{ fluentbit_apt_key_path }}] {{ fluentbit_apt_repos_url }}
-      {{ ansible_distribution_release | lower }} {{ fluentbit_apt_release_channel }}
+      {{ ansible_distribution_release | lower }} {{ fluentbit_apt_repos_component }}
     filename: fluentbit
     state: present
 
