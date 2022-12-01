@@ -46,8 +46,8 @@ provisioner:
   inventory:
     group_vars:
       fluentbit:
-        fluentbit_pkg_name: "td-agent-bit"
-        fluentbit_svc_name: "td-agent-bit"
+        fluentbit_pkg_name: "fluent-bit"
+        fluentbit_svc_name: "fluent-bit"
         fluentbit_file_input:
           name: tail
           alias: file_input
