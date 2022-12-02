@@ -24,7 +24,7 @@
   block:
     - name: "Stop and disable legacy service."
       service:
-        name: "{{ fluentbit_svc_name }}"
+        name: "{{ fluentbit_svc_name_legacy }}"
         state: stopped
         enabled: false
 
