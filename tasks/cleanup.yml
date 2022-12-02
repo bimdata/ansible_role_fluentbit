@@ -1,0 +1,51 @@
+---
+- name: "Cleanup legacy apt configuration."
+  when: fluentbit_apt_cleanup_legacy | bool
+  block:
+    - name: "Cleanup legacy key in main keyring if needed."
+      apt_key:
+        id: "{{ fluentbit_apt_key_legacy_id }}"
+        state: absent
+    - name: "Cleanup legacy key in custom keyring if needed."
+      apt_key:
+        keyring: "{{ fluentbit_apt_key_path }}"
+        id: "{{ fluentbit_apt_key_legacy_id }}"
+        state: absent
+    - name: "Cleanup legacy Fluentbit repository definition."
+      apt_repository:
+        repo: "deb {{ fluentbit_apt_repos_url }} {{ ansible_distribution_release | lower }} main"
+        update_cache: True
+        filename: fluentbit
+        state: absent
+# End of block
+
+- name: "Cleanup legacy naming configuration."
+  when: fluentbit_naming_cleanup_legacy | bool
+  block:
+    - name: "Stop and disable legacy service."
+      service:
+        name: "{{ fluentbit_svc_name }}"
+        state: stopped
+        enabled: false
+
+    - name: "Remove legacy service override."
+      file:
+        path: "/etc/systemd/system/{{ fluentbit_svc_name_legacy }}.service.d"
+        state: absent
+
+    - name: "Unhold legacy version."
+      dpkg_selections:
+        name: "{{ fluentbit_pkg_name_legacy }}"
+        selection: deinstall
+
+    - name: "Uninstall Legacy version."
+      apt:
+        name: "{{ fluentbit_pkg_name_legacy }}"
+        state: absent
+        clean: true
+        purge: true
+
+    - name: "Remove legacy configuration."
+      file:
+        path: "{{ fluentbit_conf_directory_legacy }}"
+        state: absent

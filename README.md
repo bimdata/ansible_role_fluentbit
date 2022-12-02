@@ -18,19 +18,25 @@ https://docs.fluentbit.io/manual/v/1.6/administration/configuring-fluent-bit/con
 
 Variables used for the installation:
 
-| Variables                     | Default value                               | Description                                                 |
-|-------------------------------|---------------------------------------------|-------------------------------------------------------------|
-| fluentbit_prerequisites       | ['apt-transport-https', 'curl', 'gnupg']    | List of package that need to be installed before Fluentbit. |
-| fluentbit_apt_key_path        | "/usr/share/keyrings/fluentbit-keyring.gpg" | APT keyring path use to store the fluentbit key.            |
-| fluentbit_apt_key_url         | https://packages.fluentbit.io/fluentbit.key | The APT key for the Fluentbit package.                        |
-| fluentbit_apt_repos_url       | "https://packages.fluentbit.io/{{ ansible_distribution \| lower }}/{{ ansible_distribution_release \| lower }}"  | The APT repository address needed to install Fluentbit. |
-| fluentbit_apt_repos_component | main                                        | APT repository component.                                   |         
-| fluentbit_pkg_name            | td-agent-bit                                | The Fluentbit APT package name.                             |
-| fluentbit_pkg_version         | ""                                          | Install a specific version of the package.                  |
-| fluentbit_pkg_version_hold    | "{{ fluentbit_pkg_version \| default(False) \| ternary(True, False) }}" | Lock package version to prevent accidental updates. By default, `True` if `fluentbit_pkg_version` is defined, `False` otherwise. |
-| fluentbit_svc_name            | td-agent-bit                                | The Fluentbit service name to start/stop the daemon.        |
-| fluentbit_apt_cleanup_legacy  | false                                       | Remove old keys and old APT sources if true.                |
-| fluentbit_apt_key_legacy_id   | F209D8762A60CD49E680633B4FF8368B6EA0722A    | ID of the old GPG key to remove from keyring.               |
+| Variables                       | Default value                               | Description                                                 |
+|---------------------------------|---------------------------------------------|-------------------------------------------------------------|
+| fluentbit_prerequisites         | ['apt-transport-https', 'curl', 'gnupg']    | List of package that need to be installed before Fluentbit. |
+| fluentbit_apt_key_path          | "/usr/share/keyrings/fluentbit-keyring.gpg" | APT keyring path use to store the fluentbit key.            |
+| fluentbit_apt_key_url           | https://packages.fluentbit.io/fluentbit.key | The APT key for the Fluentbit package.                      |
+| fluentbit_apt_repos_url         | "https://packages.fluentbit.io/{{ ansible_distribution \| lower }}/{{ ansible_distribution_release \| lower }}"  | The APT repository address needed to install Fluentbit. |
+| fluentbit_apt_repos_component   | main                                        | APT repository component.                                   |         
+| fluentbit_pkg_name              | fluent-bit                                  | The Fluentbit APT package name.                             |
+| fluentbit_pkg_version           | ""                                          | Install a specific version of the package.                  |
+| fluentbit_pkg_version_hold      | "{{ fluentbit_pkg_version \| default(False) \| ternary(True, False) }}" | Lock package version to prevent accidental updates. By default, `True` if `fluentbit_pkg_version` is defined, `False` otherwise. |
+| fluentbit_svc_name              | fluent-bit                                  | The Fluentbit service name to start/stop the daemon.        |
+| fluentbit_apt_cleanup_legacy    | false                                       | Remove old keys and old APT sources if true.                |
+| fluentbit_apt_key_legacy_id     | F209D8762A60CD49E680633B4FF8368B6EA0722A    | ID of the old GPG key to remove from keyring.               |
+| fluentbit_naming_cleanup_legacy | false                                       | Remove old service / conf / apt with td-agent name.         |
+| fluentbit_pkg_name_legacy       | td-agent-bit                                | Pkg name that will be remove by legacy cleaner.             |
+| fluentbit_svc_name_legacy       | td-agent-bit                                | Service name that will be remove by legacy cleaner.         |
+| fluentbit_conf_directory_legacy | /etc/td-agent-bit/                          | Conf directory that will be remove by legacy cleaner.       |
+
+
 Variables used for the general configuration:
 
 | Variables                      | Default value     | Description                                               |
