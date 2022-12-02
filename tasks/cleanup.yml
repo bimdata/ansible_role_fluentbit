@@ -22,11 +22,15 @@
 - name: "Cleanup legacy naming configuration."
   when: fluentbit_naming_cleanup_legacy | bool
   block:
+    - name: "Get services facts."
+      service_facts:
+
     - name: "Stop and disable legacy service."
       service:
         name: "{{ fluentbit_svc_name_legacy }}"
         state: stopped
         enabled: false
+      when: fluentbit_svc_name_legacy in services
 
     - name: "Remove legacy service override."
       file:
