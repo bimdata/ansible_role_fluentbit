@@ -35,11 +35,15 @@ fluentbit_svc_grace: "5"
 fluentbit_svc_daemon: "off"  # Need to be Off when using the provided systemd unit.
 fluentbit_svc_logfile: ""
 fluentbit_svc_loglevel: "info"
-fluentbit_svc_parsers:
+fluentbit_svc_parsers_file:
   - parsers.conf
-fluentbit_svc_plugins:
+fluentbit_svc_plugins_file:
   - plugins.conf
-fluentbit_svc_streams: []
+fluentbit_svc_streams_file: []
+
+# Enable ansible managed parser if there are some defined
+fluentbit_managed_parsers_enable: "{{ ((_fluentbit_parsers | length) or (_fluentbit_mlparsers | length)) | bool }}"
+fluentbit_managed_parsers_file: "{{ fluentbit_conf_directory }}/managed-parsers.conf"
 
 fluentbit_svc_http:
   server: "off"
@@ -49,6 +53,8 @@ fluentbit_svc_storage:
 # fluentbit_svc_limit_open_files: 65536
 
 # Log processing
+_fluentbit_parsers: "{{ lookup('template', 'get_vars.j2', template_vars=dict(var_type='parser')) }}"
+_fluentbit_mlparsers: "{{ lookup('template', 'get_vars.j2', template_vars=dict(var_type='mlparser')) }}"
 _fluentbit_inputs: "{{ lookup('template', 'get_vars.j2', template_vars=dict(var_type='input')) }}"
 _fluentbit_filters: "{{ lookup('template', 'get_vars.j2', template_vars=dict(var_type='filter')) }}"
 _fluentbit_outputs: "{{ lookup('template', 'get_vars.j2', template_vars=dict(var_type='output')) }}"

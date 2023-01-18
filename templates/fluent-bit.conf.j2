@@ -9,19 +9,23 @@
 {% endif %}
   Log_Level {{ fluentbit_svc_loglevel }}
 
-{% if fluentbit_svc_parsers | length > 0 %}
-{% for parser in fluentbit_svc_parsers%}
-  Parsers_File {{ parser }}
+{% if fluentbit_svc_parsers_file | length > 0 %}
+{% for path in fluentbit_svc_parsers_file %}
+  Parsers_File {{ path }}
 {% endfor%}
 {% endif %}
-{% if fluentbit_svc_plugins | length > 0 %}
-{% for plugin in fluentbit_svc_plugins%}
-  Plugins_File {{ plugin }}
+{% if fluentbit_managed_parsers_enable | bool %}
+  Parsers_File {{ fluentbit_managed_parsers_file }}
+{% endif %}
+
+{% if fluentbit_svc_plugins_file | length > 0 %}
+{% for path in fluentbit_svc_plugins_file %}
+  Plugins_File {{ path }}
 {% endfor%}
 {% endif %}
-{% if fluentbit_svc_streams | length > 0 %}
-{% for stream in fluentbit_svc_streams%}
-  Streams_File {{ stream }}
+{% if fluentbit_svc_streams_file | length > 0 %}
+{% for path in fluentbit_svc_streams_file %}
+  Streams_File {{ path }}
 {% endfor%}
 {% endif %}
 
@@ -44,18 +48,21 @@
 {% for key, value in _input.items() %}
   {{ key | regex_replace ('^[0-9]+__', '') }} {{ value }}
 {% endfor %}
-{% endfor %}
+
+{% endfor -%}
 
 {% for _filter in _fluentbit_filters %}
 [FILTER]
 {% for key, value in _filter.items() %}
   {{ key | regex_replace ('^[0-9]+__', '') }} {{ value }}
 {% endfor %}
-{% endfor %}
+
+{% endfor -%}
 
 {% for _output in _fluentbit_outputs %}
 [OUTPUT]
 {% for key, value in _output.items() %}
   {{ key | regex_replace ('^[0-9]+__', '') }} {{ value }}
 {% endfor %}
-{% endfor %}
+
+{% endfor -%}
