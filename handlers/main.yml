@@ -2,5 +2,5 @@
 - name: "Restart Fluentbit."
   service:
     name: "{{ fluentbit_svc_name }}"
-    daemon_reload: "{{ _override.changed | default(false) }}"
+    daemon_reload: true
     state: restarted

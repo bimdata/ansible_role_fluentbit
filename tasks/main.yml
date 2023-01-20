@@ -66,6 +66,16 @@
     mode: 0644
   notify: "Restart Fluentbit."
 
+- name: "Create ansible managed parser file if needed."
+  template:
+    src: managed-parsers.conf.j2
+    dest: "{{ fluentbit_managed_parsers_file }}"
+    mode: 0644
+  notify: "Restart Fluentbit."
+  when:
+    - fluentbit_managed_parsers_enable is defined
+    - fluentbit_managed_parsers_enable | bool
+
 - name: "Create needed directory."
   file:
     path: "/etc/systemd/system/{{ fluentbit_svc_name }}.service.d"
@@ -78,7 +88,6 @@
     src: fluent-bit-override.conf.j2
     dest: "/etc/systemd/system/{{ fluentbit_svc_name }}.service.d/override.conf"
     mode: 0644
-  register: _override
   when: fluentbit_svc_limit_open_files is defined
 
 - name: "Delete override systemd configuration if needed."
@@ -86,4 +95,3 @@
     path: "/etc/systemd/system/{{ fluentbit_svc_name }}.service.d/override.conf"
     state: absent
   when: fluentbit_svc_limit_open_files is not defined
-  register: _override
