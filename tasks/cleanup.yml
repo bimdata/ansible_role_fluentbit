@@ -30,7 +30,9 @@
         name: "{{ fluentbit_svc_name_legacy }}"
         state: stopped
         enabled: false
-      when: fluentbit_svc_name_legacy in services
+      when:
+        - services[fluentbit_svc_name_legacy + ".service"] is defined
+        - services[fluentbit_svc_name_legacy + ".service"].status != "not-found"
 
     - name: "Remove legacy service override."
       file:
