@@ -42,7 +42,7 @@ fluentbit_svc_plugins_file:
 fluentbit_svc_streams_file: []
 
 # Enable ansible managed parser if there are some defined
-fluentbit_managed_parsers_enable: "{{ ((_fluentbit_parsers | length) or (_fluentbit_mlparsers | length)) | bool }}"
+fluentbit_managed_parsers_enable: "{{ ((_fluentbit_parsers | length) or (_fluentbit_mlparsers | length)) > 0 | bool }}"
 fluentbit_managed_parsers_file: "{{ fluentbit_conf_directory }}/managed-parsers.conf"
 
 fluentbit_svc_http:
