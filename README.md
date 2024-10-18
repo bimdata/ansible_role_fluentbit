@@ -24,7 +24,7 @@ Variables used for the installation:
 | fluentbit_apt_key_path          | "/usr/share/keyrings/fluentbit-keyring.gpg" | APT keyring path use to store the fluentbit key.            |
 | fluentbit_apt_key_url           | https://packages.fluentbit.io/fluentbit.key | The APT key for the Fluentbit package.                      |
 | fluentbit_apt_repos_url         | "https://packages.fluentbit.io/{{ ansible_distribution \| lower }}/{{ ansible_distribution_release \| lower }}"  | The APT repository address needed to install Fluentbit. |
-| fluentbit_apt_repos_component   | main                                        | APT repository component.                                   |         
+| fluentbit_apt_repos_component   | main                                        | APT repository component.                                   |
 | fluentbit_pkg_name              | fluent-bit                                  | The Fluentbit APT package name.                             |
 | fluentbit_pkg_version           | ""                                          | Install a specific version of the package.                  |
 | fluentbit_pkg_version_hold      | "{{ fluentbit_pkg_version \| default(False) \| ternary(True, False) }}" | Lock package version to prevent accidental updates. By default, `True` if `fluentbit_pkg_version` is defined, `False` otherwise. |
@@ -96,7 +96,7 @@ Templating is used to build these lists with other variables.
 * `_fluentbit_filters` will aggregate all the variables whose name matches this regex: `^fluentbit_.+_filter(s)?$'`.
 * `_fluentbit_outputs` will aggregate all the variables whose name matches this regex: `^fluentbit_.+_output(s)?$'`.
 * `_fluentbit_parsers` will aggregate all the variables whose name matches this regex: `^fluentbit_.+_parser(s)?$'`.
-* `_fluentbit_outputs` will aggregate all the variables whose name matches this regex: `^fluentbit_.+_mlparser(s)?$'`.
+* `_fluentbit_mlparsers` will aggregate all the variables whose name matches this regex: `^fluentbit_.+_mlparser(s)?$'`.
 
 Each variables matching these regexes must be:
   - a dictionary defining one input/filter/output/parser **or**
