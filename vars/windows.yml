@@ -1,0 +1,44 @@
+---
+fluentbit_path: "C:\\fluent-bit"
+fluentbit_conf_directory: "{{ fluentbit_path }}\\conf"
+fluentbit_conf_file_path: "{{ fluentbit_conf_directory }}\\fluent-bit.conf"
+# Enable ansible managed parser if there are some defined
+fluentbit_managed_parsers_enable: "{{ ((_fluentbit_parsers | length) or (_fluentbit_mlparsers | length)) > 0 | bool }}"
+fluentbit_managed_parsers_file: "{{ fluentbit_conf_directory }}\\managed-parsers.conf"
+fluentbit_dbs_path: "{{ fluentbit_path }}\\dbs"
+fluentbit_ipban_parser:
+  - name: ipban1
+    format: regex
+    regex: '^(?<time>[^ ]* {1,2}[^ ]*\.\d+)\|(?<ipban_log_level>[A-Z]+)\|.*\|Login (?<ipban_login_status>\S+): (?<client_ip>[^ ]+), (\((?<ipban_username>\S+)\))?, (?<ipban_service_name>\w+), (?<ipban_count>\d+)'
+    time_key: time
+    time_format: '%Y-%m-%d %H:%M:%S.%L'
+  - name: ipban2
+    format: regex
+    regex: '^(?<time>[^ ]* {1,2}[^ ]*\.\d+)\|(?<ipban_log_level>[A-Z]+)\|.*\|Login (?<ipban_login_status>\S+), address: (?<client_ip>[^ ]+), user name: (?<ipban_username>\S+), source: (?<ipban_service_name>\w+)'
+    time_key: time
+    time_format: '%Y-%m-%d %H:%M:%S.%L'
+  - name: ipban3
+    format: regex
+    regex: '^(?<time>[^ ]* {1,2}[^ ]*\.\d+)\|(?<ipban_log_level>[A-Z]+)\|.*\|(?<ipban_action>\S+) ip address: (?<client_ip>[^ ]+), user name: (\((?<ipban_username>\S+)\))?, .*, count: (?<ipban_count>\d+),.*, duration: (?<ipban_duration>.+)'
+    time_key: time
+    time_format: '%Y-%m-%d %H:%M:%S.%L'
+  - name: ipban4
+    format: regex
+    regex: '^(?<time>[^ ]* {1,2}[^ ]*\.\d+)\|(?<ipban_log_level>[A-Z]+)\|.*\|IP (?<client_ip>[^ ]+), (?<ipban_username>\S+), (?<ipban_service_name>\w+) ban (?<ipban_ban_status>.+)'
+    time_key: time
+    time_format: '%Y-%m-%d %H:%M:%S.%L'
+  - name: ipban5
+    format: regex
+    regex: '^(?<time>[^ ]* {1,2}[^ ]*\.\d+)\|(?<ipban_log_level>[A-Z]+)\|.*\|(?<ipban_action>\S+) ip address (?<client_ip>[^ ]+), (?<ipban_reason>.+)'
+    time_key: time
+    time_format: '%Y-%m-%d %H:%M:%S.%L'
+  - name: ipban6
+    format: regex
+    regex: '^(?<time>[^ ]* {1,2}[^ ]*\.\d+)\|(?<ipban_log_level>[A-Z]+)\|.*\|Firewall entries (?<ipban_firewall_status>.+): (?<client_ip>[^ ]+)'
+    time_key: time
+    time_format: '%Y-%m-%d %H:%M:%S.%L'
+  - name: ipban7
+    format: regex
+    regex: '^(?<time>[^ ]* {1,2}[^ ]*\.\d+)\|(?<ipban_log_level>[A-Z]+)\|.*\|(?<ipban_action>\w+) failed login ip address (?<client_ip>[^ ]+), (?<ipban_reason>.+)'
+    time_key: time
+    time_format: '%Y-%m-%d %H:%M:%S.%L'

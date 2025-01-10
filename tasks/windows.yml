@@ -1,0 +1,60 @@
+---
+- name: "Check if Fluentbit is installed."
+  ansible.windows.win_stat:
+    path: "{{ fluentbit_path }}\\bin\\fluent-bit.exe"
+  register: fluentbit_exe
+
+- name: "Check Fluentbit current version."
+  ansible.windows.win_command: "{{ fluentbit_path }}\\bin\\fluent-bit.exe -V"
+  register: fluentbit_current_version
+  when: fluentbit_exe.stat.exists
+
+- name: "Check if Fluentbit installer is downloaded."
+  ansible.windows.win_stat:
+    path: "C:\\temp\\fluent-bit-{{ fluentbit_version }}-win64.exe"
+  register: fluentbit_installer_exe
+
+- name: "Download Fluentbit installer."
+  ansible.windows.win_get_url:
+    url: "https://packages.fluentbit.io/windows/fluent-bit-{{ fluentbit_version }}-win64.exe"
+    dest: "C:\\temp\\fluent-bit-{{ fluentbit_version }}-win64.exe"
+  when: not fluentbit_installer_exe.stat.exists or not fluentbit_version in fluentbit_current_version.stdout
+  register: fluentbit_installer
+
+- name: "Install Fluentbit."
+  ansible.windows.win_powershell:
+    script: "C:\\temp\\fluent-bit-{{ fluentbit_version }}-win64.exe /S /D=C:\\fluent-bit"
+    parameters:
+      Path: "C:\\temp"
+  when:
+    - fluentbit_installer is succeeded or fluentbit_installer is skipped
+    - fluentbit_current_version is skipped or not fluentbit_version in fluentbit_current_version.stdout
+
+- name: "Create needed directory."
+  ansible.windows.win_file:
+    path: "{{ fluentbit_dbs_path }}"
+    state: directory
+  when: fluentbit_dbs_path | length > 0
+
+- name: "Create Fluentbit service."
+  ansible.windows.win_service:
+    name: "{{ fluentbit_svc_name }}"
+    path: "{{ fluentbit_path }}\\bin\\fluent-bit.exe -c {{ fluentbit_path }}\\conf\\fluent-bit.conf"
+    display_name: "{{ fluentbit_svc_name }}"
+    description: Fluentbit
+  notify: "Restart Fluentbit."
+
+- name: "Create main Fluentbit configuration."
+  ansible.windows.win_template:
+    src: fluent-bit.conf.j2
+    dest: "{{ fluentbit_conf_file_path }}"
+  notify: "Restart Fluentbit."
+
+- name: "Create ansible managed parser file if needed."
+  ansible.windows.win_template:
+    src: managed-parsers.conf.j2
+    dest: "{{ fluentbit_managed_parsers_file }}"
+  notify: "Restart Fluentbit."
+  when:
+    - fluentbit_managed_parsers_enable is defined
+    - fluentbit_managed_parsers_enable | bool

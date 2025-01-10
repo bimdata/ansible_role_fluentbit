@@ -1,6 +1,8 @@
 ---
-- name: "Restart Fluentbit."
-  service:
-    name: "{{ fluentbit_svc_name }}"
-    daemon_reload: true
-    state: restarted
+- ansible.builtin.include_tasks: debian.yml
+  listen: "Restart Fluentbit."
+  when: ansible_os_family == 'Debian'
+
+- ansible.builtin.include_tasks: windows.yml
+  listen: "Restart Fluentbit."
+  when: ansible_os_family == 'Windows'

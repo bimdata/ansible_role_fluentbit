@@ -1,0 +1,5 @@
+---
+- name: "Restart Fluentbit."
+  ansible.windows.win_service:
+    name: "{{ fluentbit_svc_name }}"
+    state: restarted
