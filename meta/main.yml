@@ -1,11 +1,12 @@
 ---
 galaxy_info:
+  namespace: bimdata
   role_name: fluentbit
   author: Romain
   description: This role installs and configures Fluentbit.
   company: BIMData.io
   license: MIT
-  min_ansible_version: "2.9"
+  min_ansible_version: "2.13"
   platforms:
     - name: Debian
       versions:

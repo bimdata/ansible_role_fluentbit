@@ -21,23 +21,11 @@
     filename: fluentbit
     state: present
 
-- name: "Get installed Fluentbit version."
-  command: dpkg-query --showformat='${Version}' --show {{ fluentbit_pkg_name }}
-  register: fluentbit_pkg_installed_version
-  failed_when: false
-  changed_when: false
-  check_mode: false
-
-- name: "Unhold Fluentbit version."
-  dpkg_selections:
-    name: "{{ fluentbit_pkg_name }}"
-    selection: install
-  when: not fluentbit_pkg_version_hold or (fluentbit_pkg_installed_version.stdout and fluentbit_pkg_installed_version.stdout != fluentbit_pkg_version)
-
 - name: "Install Fluentbit."
   apt:
     name: "{{ fluentbit_pkg_name }}{% if fluentbit_pkg_version is defined and fluentbit_pkg_version != '' %}={{ fluentbit_pkg_version }}{% endif %}"
     update_cache: true
+    allow_change_held_packages: true
     state: present
   notify: "Restart Fluentbit."
 
