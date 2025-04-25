@@ -1,58 +1,40 @@
 ---
-driver:
-  name: docker
-lint: |
-  set -e
-  yamllint .
-  ansible-lint --force-color
+dependency:
+  name: galaxy
+  options:
+    requirements-file: requirements.yml
+
 platforms:
-  - name: fluentbit_stretch
-    image: debian:stretch
-    command: /sbin/init
-    tmpfs: ['/tmp', '/run', '/run/lock']
-    volumes:
-      - /sys/fs/cgroup:/sys/fs/cgroup:ro
-    groups:
-      - fluentbit
-  - name: fluentbit_buster
-    image: debian:buster
-    command: /sbin/init
-    tmpfs: ['/tmp', '/run', '/run/lock']
-    volumes:
-      - /sys/fs/cgroup:/sys/fs/cgroup:ro
-    groups:
-      - fluentbit
-  - name: fluentbit_bionic
-    image: ubuntu:bionic
-    command: /sbin/init
-    tmpfs: ['/tmp', '/run', '/run/lock']
-    volumes:
-      - /sys/fs/cgroup:/sys/fs/cgroup:ro
-    groups:
-      - fluentbit
-  - name: fluentbit_focal
+  - name: fluentbit_bullseye_${TOX_ENV_NAME}
+    image: debian:bullseye
+  - name: fluentbit_bookworm_${TOX_ENV_NAME}
+    image: debian:bookworm
+  # Will be added when the needed fixes are done
+  # - name: fluentbit_trixie_${TOX_ENV_NAME}
+  #   image: debian:trixie
+
+  - name: fluentbit_focal_${TOX_ENV_NAME}
     image: ubuntu:focal
-    command: /sbin/init
-    tmpfs: ['/tmp', '/run', '/run/lock']
-    volumes:
-      - /sys/fs/cgroup:/sys/fs/cgroup:ro
-    groups:
-      - fluentbit
+  - name: fluentbit_jammy_${TOX_ENV_NAME}
+    image: ubuntu:jammy
+  # Will be added when the needed fixes are done
+  # - name: fluentbit_oracular_${TOX_ENV_NAME}
+  #   image: ubuntu:oracular
+
 provisioner:
   name: ansible
-  playbook:
-    converge: converge.yml
-    verify: verify.yml
+  env:
+    ANSIBLE_ROLES_PATH: ${MOLECULE_PROJECT_DIRECTORY}/..
   inventory:
     group_vars:
-      fluentbit:
+      all:
         fluentbit_pkg_name: "fluent-bit"
         fluentbit_svc_name: "fluent-bit"
         fluentbit_file_input:
           name: tail
           alias: file_input
           path: /var/log/log_input
-          read_from_head: True
+          read_from_head: true
           refresh_interval: 1
         fluentbit_test_filter:
           name: modify
@@ -65,3 +47,4 @@ provisioner:
           match: '*'
           path: /var/log
           file: check_output.txt
+
