@@ -7,10 +7,14 @@ on:
 env:
   PYTHON_VERSION: 3.11
 
+permissions: {}
+
 jobs:
   lint:
     name: Ansible Lint
     runs-on: ubuntu-24.04
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python
@@ -27,6 +31,8 @@ jobs:
   test:
     name: Tox - Molecule test
     runs-on: ubuntu-24.04
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python
