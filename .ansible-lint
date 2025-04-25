@@ -1,4 +1,8 @@
 ---
-exclude_paths: []
+exclude_paths:
+  - .ansible/
+  - .github/
+  - .tox/
+  - molecule/
 
 skip_list: []

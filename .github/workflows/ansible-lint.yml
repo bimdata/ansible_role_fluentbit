@@ -1,8 +1,14 @@
-name: main
+name: ansible-lint
 
 on:
   pull_request:
     branches: ["main"]
+    paths:
+      - "defaults/**"
+      - "handlers/**"
+      - "tasks/**"
+      - "templates/**"
+      - ".ansible-lint"      
 
 env:
   PYTHON_VERSION: 3.11
@@ -10,8 +16,8 @@ env:
 permissions: {}
 
 jobs:
-  test:
-    name: Tox - Molecule test
+  lint:
+    name: Ansible Lint
     runs-on: ubuntu-24.04
     permissions:
       contents: read
@@ -22,9 +28,8 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: ${{ env.PYTHON_VERSION }}
-          cache: 'pip'
-      - name: Install dependencies
-        run: |
-          pip install -r requirements-dev.txt
-      - name: Run the tests
-        run: tox
+      - name: Run ansible-lint
+        uses: ansible/ansible-lint@main
+        with:
+          args: "--offline"
+          setup_python: "false"

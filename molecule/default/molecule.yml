@@ -4,31 +4,22 @@ dependency:
   options:
     requirements-file: requirements.yml
 
-driver:
-  name: docker
-
 platforms:
   - name: fluentbit_bullseye_${TOX_ENV_NAME}
     image: debian:bullseye
-    pre_build_image: false
   - name: fluentbit_bookworm_${TOX_ENV_NAME}
     image: debian:bookworm
-    pre_build_image: false
   # Will be added when the needed fixes are done
   # - name: fluentbit_trixie_${TOX_ENV_NAME}
   #   image: debian:trixie
-  #   pre_build_image: false
 
   - name: fluentbit_focal_${TOX_ENV_NAME}
     image: ubuntu:focal
-    pre_build_image: false
   - name: fluentbit_jammy_${TOX_ENV_NAME}
     image: ubuntu:jammy
-    pre_build_image: false
   # Will be added when the needed fixes are done
   # - name: fluentbit_oracular_${TOX_ENV_NAME}
   #   image: ubuntu:oracular
-  #   pre_build_image: false
 
 provisioner:
   name: ansible
@@ -56,11 +47,3 @@ provisioner:
           match: '*'
           path: /var/log
           file: check_output.txt
-
-scenario:
-  name: default
-  test_sequence:
-    - create
-    - converge
-    - verify
-    - destroy
