@@ -1,6 +1,6 @@
 ---
 - name: "Restart Fluentbit."
-  service:
+  ansible.builtin.systemd:
     name: "{{ fluentbit_svc_name }}"
     daemon_reload: true
     state: restarted

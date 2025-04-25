@@ -1,3 +1,4 @@
 # Ansible
+.ansible
 .cache
 *.retry

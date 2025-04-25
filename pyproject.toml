@@ -1,0 +1,34 @@
+[tool.tox]
+requires = ["tox>=4.0"]
+envlist = ["ansible-2.15", "ansible-2.16", "ansible-2.17", "ansible-2.18"]
+skipsdist = true
+
+[tool.tox.env_run_base]
+commands = [
+    ["ansible-lint", "--offline"],
+    ["molecule", "test"]
+]
+
+[tool.tox.env.ansible-2.15]
+deps = [
+    "-r requirements-tox.txt",
+    "ansible-core==2.15.*"
+]
+
+[tool.tox.env.ansible-2.16]
+deps = [
+    "-r requirements-tox.txt",
+    "ansible-core==2.16.*"
+]
+
+[tool.tox.env.ansible-2.17]
+deps = [
+    "-r requirements-tox.txt",
+    "ansible-core==2.17.*"
+]
+
+[tool.tox.env.ansible-2.18]
+deps = [
+    "-r requirements-tox.txt",
+    "ansible-core==2.18.*"
+]

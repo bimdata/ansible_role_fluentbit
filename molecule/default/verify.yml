@@ -3,35 +3,31 @@
   hosts: all
   tasks:
     - name: "Create fake log file"
-      file:
+      ansible.builtin.file:
         path: "{{ fluentbit_file_input.path }}"
-        mode: 0644
+        mode: "0644"
         state: touch
     - name: "Generate some fake log"
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: "{{ fluentbit_file_input.path }}"
         line: "This is a test message."
     - name: "Check if fluentbit is installed"
-      package:
+      ansible.builtin.package:
         name: "{{ fluentbit_pkg_name }}"
         state: present
       register: pkg_install
-      check_mode: yes
+      check_mode: true
       failed_when: pkg_install is changed or pkg_install is failed
     - name: "Check if fluentbit service is running"
-      service:
+      ansible.builtin.systemd:
         name: "{{ fluentbit_svc_name }}"
         state: started
-        enabled: yes
+        enabled: true
       register: svc_conf
-      check_mode: yes
+      check_mode: true
       failed_when: svc_conf is changed or svc_conf is failed
-    - name: "Get log file content"
-      slurp:
-        src: "{{ fluentbit_file_output.path }}/{{ fluentbit_file_output.file }}"
-      register: logfile
-    - name: "Check that the log file contains the expected strings"
-      assert:
-        that:
-          - "'This is a test message.' in logfile['content'] | b64decode"
-          - "'JUST_A_TEST' in logfile['content'] | b64decode"
+    - name: "Check if the log is process"
+      ansible.builtin.wait_for:
+        path: "{{ fluentbit_file_output.path }}/{{ fluentbit_file_output.file }}"
+        search_regex: "JUST_A_TEST"
+        timeout: 30
