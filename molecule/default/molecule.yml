@@ -48,10 +48,3 @@ provisioner:
           path: /var/log
           file: check_output.txt
 
-scenario:
-  name: default
-  test_sequence:
-    - create
-    - converge
-    - verify
-    - destroy
