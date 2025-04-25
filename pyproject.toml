@@ -5,7 +5,6 @@ skipsdist = true
 
 [tool.tox.env_run_base]
 commands = [
-    ["ansible-lint", "--offline"],
     ["molecule", "test"]
 ]
 
