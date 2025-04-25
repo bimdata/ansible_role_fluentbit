@@ -3,6 +3,13 @@ name: main
 on:
   pull_request:
     branches: ["main"]
+    paths:
+      - "defaults/**"
+      - "handlers/**"
+      - "tasks/**"
+      - "templates/**"
+      - ".ansible-lint"
+  workflow_dispatch:
 
 env:
   PYTHON_VERSION: 3.11
@@ -10,6 +17,24 @@ env:
 permissions: {}
 
 jobs:
+  lint:
+    name: Ansible Lint
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        id: setup-python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: Run ansible-lint
+        uses: ansible/ansible-lint@main
+        with:
+          args: "--offline"
+          setup_python: "false"
+
   test:
     name: Tox - Molecule test
     runs-on: ubuntu-24.04

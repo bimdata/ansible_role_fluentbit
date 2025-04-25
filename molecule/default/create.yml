@@ -5,7 +5,7 @@
     molecule_inventory:
       all:
         hosts: {}
-        molecule: {}
+      molecule: {}
   tasks:
     - name: Create a container
       community.docker.docker_container:
@@ -33,9 +33,10 @@
           all:
             children:
               molecule:
-                hosts:
-                  "{{ item.name }}":
-                    ansible_connection: community.docker.docker
+          molecule:
+            hosts:
+              "{{ item.name }}":
+                ansible_connection: community.docker.docker
       ansible.builtin.set_fact:
         molecule_inventory: >
           {{ molecule_inventory | combine(inventory_partial_yaml | from_yaml, recursive=true) }}
@@ -60,15 +61,10 @@
           molecule group was not found inside inventory groups: {{ groups }}
       run_once: true # noqa: run-once[task]
 
-# we want to avoid errors like "Failed to create temporary directory"
-- name: Validate that inventory was refreshed & install system prerequisites
+- name: Install system prerequisites
   hosts: molecule
   gather_facts: false
   tasks:
-    - name: Check uname
-      ansible.builtin.raw: uname -a
-      register: result
-      changed_when: false
     - name: "Install system requirements"
       ansible.builtin.raw: |
         apt-get update &&
