@@ -1,2 +1,2 @@
 tox==4.25.0
-ansible==11.5.0
+ansible-dev-tools==25.4.0
