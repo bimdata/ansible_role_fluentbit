@@ -2,3 +2,4 @@
 .ansible
 .cache
 *.retry
+.python-version

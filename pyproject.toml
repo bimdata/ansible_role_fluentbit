@@ -1,17 +1,11 @@
 [tool.tox]
 requires = ["tox>=4.0"]
-envlist = ["ansible-2.15", "ansible-2.16", "ansible-2.17", "ansible-2.18"]
+envlist = ["ansible-2.16", "ansible-2.17", "ansible-2.18", "ansible-2.19"]
 skipsdist = true
 
 [tool.tox.env_run_base]
 commands = [
     ["molecule", "test"]
-]
-
-[tool.tox.env.ansible-2.15]
-deps = [
-    "-r requirements-tox.txt",
-    "ansible-core==2.15.*"
 ]
 
 [tool.tox.env.ansible-2.16]
@@ -30,4 +24,10 @@ deps = [
 deps = [
     "-r requirements-tox.txt",
     "ansible-core==2.18.*"
+]
+
+[tool.tox.env.ansible-2.19]
+deps = [
+    "-r requirements-tox.txt",
+    "ansible-core==2.19.*"
 ]

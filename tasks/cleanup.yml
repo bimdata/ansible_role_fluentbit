@@ -57,3 +57,14 @@
       ansible.builtin.file:
         path: "{{ fluentbit_conf_directory_legacy }}"
         state: absent
+
+- name: "Cleanup pre-deb822 repository & key"
+  block:
+    - name: "Remove fluentbit non deb822 repository ressources"
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: absent
+      loop:
+        - "{{ fluentbit_apt_key_path }}"
+        - /etc/apt/sources.list.d/fluentbit.list
+      failed_when: false
