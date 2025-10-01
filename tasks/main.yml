@@ -7,19 +7,14 @@
 - name: "Import tasks needed to cleanup legacy stuff."
   ansible.builtin.import_tasks: cleanup.yml
 
-- name: "Add Fluentbit key."
-  ansible.builtin.apt_key:
-    url: "{{ fluentbit_apt_key_url }}"
-    keyring: "{{ fluentbit_apt_key_path | default(omit) }}"
-    state: present
-
 - name: "Add Fluentbit repository."
-  ansible.builtin.apt_repository:
-    repo: |
-      deb [signed-by={{ fluentbit_apt_key_path }}] {{ fluentbit_apt_repos_url }}
-      {{ ansible_distribution_release | lower }} {{ fluentbit_apt_repos_component }}
-    filename: fluentbit
-    state: present
+  ansible.builtin.deb822_repository:
+    name: fluentbit
+    types: deb
+    uris: "{{ fluentbit_apt_repos_url }}"
+    suites: "{{ ansible_distribution_release | lower }}"
+    components: "{{ fluentbit_apt_repos_component }}"
+    signed_by: "{{ fluentbit_apt_key_url }}"
 
 - name: "Install Fluentbit."
   ansible.builtin.apt:

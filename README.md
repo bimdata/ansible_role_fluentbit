@@ -21,6 +21,7 @@ Variables used for the installation:
 | Variables                       | Default value                               | Description                                                 |
 |---------------------------------|---------------------------------------------|-------------------------------------------------------------|
 | fluentbit_prerequisites         | ['apt-transport-https', 'curl', 'gnupg']    | List of package that need to be installed before Fluentbit. |
+| fluentbit_apt_use_deb822        | true                                        | Use APT deb822 format for the fluent-bit source file.       |
 | fluentbit_apt_key_path          | "/usr/share/keyrings/fluentbit-keyring.gpg" | APT keyring path use to store the fluentbit key.            |
 | fluentbit_apt_key_url           | https://packages.fluentbit.io/fluentbit.key | The APT key for the Fluentbit package.                      |
 | fluentbit_apt_repos_url         | "https://packages.fluentbit.io/{{ ansible_distribution \| lower }}/{{ ansible_distribution_release \| lower }}"  | The APT repository address needed to install Fluentbit. |

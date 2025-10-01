@@ -1,10 +1,12 @@
 ---
 # Installation
 fluentbit_prerequisites:
+  - python3-debian
   - apt-transport-https
   - curl
   - gnupg
 
+fluentbit_apt_use_deb822: true
 fluentbit_apt_key_url: "https://packages.fluentbit.io/fluentbit.key"
 fluentbit_apt_key_path: "/usr/share/keyrings/fluentbit-keyring.gpg"
 
@@ -53,11 +55,11 @@ fluentbit_svc_storage:
 # fluentbit_svc_limit_open_files: 65536
 
 # Log processing
-_fluentbit_parsers: "{{ lookup('template', 'get_vars.j2', template_vars=dict(var_type='parser')) }}"
-_fluentbit_mlparsers: "{{ lookup('template', 'get_vars.j2', template_vars=dict(var_type='mlparser')) }}"
-_fluentbit_inputs: "{{ lookup('template', 'get_vars.j2', template_vars=dict(var_type='input')) }}"
-_fluentbit_filters: "{{ lookup('template', 'get_vars.j2', template_vars=dict(var_type='filter')) }}"
-_fluentbit_outputs: "{{ lookup('template', 'get_vars.j2', template_vars=dict(var_type='output')) }}"
+_fluentbit_parsers: "{{ lookup('template', 'get_vars.j2', template_vars=dict(var_type='parser')) | from_yaml }}"
+_fluentbit_mlparsers: "{{ lookup('template', 'get_vars.j2', template_vars=dict(var_type='mlparser')) | from_yaml }}"
+_fluentbit_inputs: "{{ lookup('template', 'get_vars.j2', template_vars=dict(var_type='input')) | from_yaml }}"
+_fluentbit_filters: "{{ lookup('template', 'get_vars.j2', template_vars=dict(var_type='filter')) | from_yaml }}"
+_fluentbit_outputs: "{{ lookup('template', 'get_vars.j2', template_vars=dict(var_type='output')) | from_yaml }}"
 
 # Others
 fluentbit_dbs_path: ""
